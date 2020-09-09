@@ -1,0 +1,14 @@
+# IDEs and editors
+/.idea
+
+# Cache Files
+**/__pycache__/*
+*.pyc
+
+# Tests & Test coverage
+.coverage
+coverage.xml
+htmlcov
+
+# Logs
+**/*.log
