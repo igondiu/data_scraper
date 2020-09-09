@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: opencellid
+      MYSQL_USER: test
+      MYSQL_PASSWORD: supersecret
+      MYSQL_HOSTNAME: database
+
+  data_scraper:
+    depends_on:
+      - db
+    links:
+      - "db:database"
+    build:
+      context: ..
+      dockerfile: devops/Dockerfile.data_scraper
+    container_name: data_scraper
+    environment:
+      # FLASK
+      - FLASK_WINDOWS_PORT=5000
+      - FLASK_DEFAULT_PORT=5000
+      - FLASK_DEBUG_MODE=true
+      - FLASK_HOST=0.0.0.0
+      # LOGS
+      - LOG_VERBOSITY=true
+    volumes:
+      - ../:/app
+    ports:
+      - 5000:5000
+      

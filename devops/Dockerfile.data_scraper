@@ -1,0 +1,14 @@
+FROM python:3.7.4-slim-buster
+
+# Directories :
+COPY .                                          /app
+
+
+
+WORKDIR                                         /app
+RUN pip3 install -r                             /app/requirements/data_scraper.txt
+
+#ENTRYPOINT [ "python3" ]
+#CMD [ "main.py" ]
+
+CMD python3 src/main.py
