@@ -13,4 +13,3 @@ RUN pip3 install -r                             /app/requirements/data_scraper.t
 
 CMD python3 src/main.py
 
-# CMD pytest --cov-report html --durations=0 --cov=lib --cov=src tests/unit/

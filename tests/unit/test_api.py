@@ -5,10 +5,7 @@ sys.path.append(os.path.dirname(os.path.abspath("./tests")))
 import requests
 import pytest
 from flask import Flask
-from werkzeug.datastructures import FileStorage
-from config import config
 from src.data_manager import DataManager
-from src.main import main
 import config.config as cfg
 
 app = Flask(__name__)
@@ -17,6 +14,8 @@ app = Flask(__name__)
 @pytest.fixture
 def data_manager():
     return DataManager(cfg)
+
+# DON'T forget to run the docker container to be able to test it correctly
 
 
 def test_post_headers_body_json(data_manager):
@@ -34,19 +33,14 @@ def test_post_headers_body_json(data_manager):
     area_arg = 12
     cell_arg = 22222
 
-    # run main.py
-    main(config, app)
-
     # POST Request :
-
-    with open(file_path, 'rb') as fp:
-        file = FileStorage(fp)
-        resp = requests.get(post_url, file=file, headers=headers)
+    with open(file_path, 'rb') as file:
+        files = {'file': ('data_for_tests.csv', file)}
+        resp = requests.post(post_url, files=files)
         assert resp.status_code == 201
-        print(resp)
 
     # GET Request :
-    get_url = get_url + "'{0}'&'{1}'&'{2}'&'{3}'".format(mcc_arg, net_arg, area_arg, cell_arg)
+    get_url = get_url + "{0}&{1}&{2}&{3}".format(mcc_arg, net_arg, area_arg, cell_arg)
 
     resp = requests.get(get_url, headers=headers)
     assert resp.status_code == 200
